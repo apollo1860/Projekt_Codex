@@ -83,7 +83,6 @@ const events = [
 { event: "In Japan fahren erstmals fahrerlose Züge im Regelbetrieb", year: 2021 },
 { event: "Ein Land verlegt seine Hauptstadt vollständig wegen Klimawandel", year: 2023 },
 { event: "„Home Office“ wird gesetzlich verankertes Recht in mehreren Ländern", year: 2020 },
-{ event: "Essbare Verpackungen setzen sich im Supermarkt durch", year: 2025 },
 { event: "Schüler weltweit organisieren den „Fridays for Future“-Streik", year: 2018 },
 { event: "Influencer werden zu anerkannten Berufsbildern", year: 2020 },
 { event: "Die erste KI wird offiziell als Erfinderin eines Patents anerkannt", year: 2021 },
