@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Go Back</title>
+  <style>
+    #next-event-container {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 1000;
+}
+
+body {
+  padding-bottom: 80px; /* Platz unten schaffen, damit Inhalte nicht vom fixierten Element verdeckt werden */
+}
+
+    body {
+      font-family: sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+    h1 {
+      margin-bottom: 5px;
+    }
+    .score-display {
+      margin-top: 0;
+    }
+    .label {
+      margin: 10px 0 4px;
+      font-size: 0.9em;
+      color: #555;
+    }
+    
+.timeline {
+  max-height: 60vh; /* oder z. B. 400px */
+  overflow-y: auto;
+  padding: 0;
+  margin: 20px 0;
+  border-left: 2px solid #ccc;
+}
+
+    .timeline li {
+      background: white;
+      margin: 8px;
+      padding: 12px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .timeline li .year {
+      font-size: 0.8em;
+      color: #888;
+      margin-top: 4px;
+    }
+    .placeholder {
+  height: 4px;
+  background: black;
+  margin: 16px 0;
+  border: none;
+  border-radius: 2px;
+}
+    #next-event {
+      display: inline-block;
+      padding: 12px 18px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: grab;
+    }
+    #next-event:active {
+      cursor: grabbing;
+    }
+    .hidden {
+      display: none;
+    }
+    #errorOverlay {
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #errorOverlay.visible {
+      display: flex;
+    }
+    #errorOverlay button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: white;
+      color: red;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="errorOverlay">
+    <div>❌ Falsch einsortiert!</div>
+    <div id="errorYear" style="margin-top: 10px; font-size: 1.2em;"></div>
+    <button onclick="dismissError()">OK</button>
+    <button onclick="restartGame()">Neustart</button>
+  </div>
+
+  <div class="container">
+    <h1>⚽ Go(al) Back</h1>
+    <p class="score-display">✅ Richtige Platzierungen: <span id="live-score">0</span></p>
+    <div class="label">🕰️ Früher</div>
+    <ul id="timeline" class="timeline"></ul>
+    <div class="label">⏳ Später</div>
+    <div id="next-event-container">
+      <div id="next-event" draggable="true">Lade Ereignis...</div>
+    </div>
+    <div id="game-over" class="hidden">
+      <h2>Spiel beendet!</h2>
+      <p>Du hast <span id="score">0</span> Ereignisse korrekt eingeordnet.</p>
+      <button onclick="restartGame()">Neustart</button>
+    </div>
+  </div>
+  
+<script src="events.js"></script>
+  
+  <script>
+
+    
+       let timeline = [];
+    let currentIndex = 0;
+    let nextEvent = null;
+    let gameOverDueToError = false;
+
+    const timelineEl = document.getElementById("timeline");
+    const nextEventEl = document.getElementById("next-event");
+    const gameOverEl = document.getElementById("game-over");
+    const scoreEl = document.getElementById("score");
+    const liveScoreEl = document.getElementById("live-score");
+    const errorOverlay = document.getElementById("errorOverlay");
+
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+function startGame() {
+  const shuffledEvents = shuffle([...events]);
+  window.currentEventSet = shuffledEvents; // ✅ global verfügbar machen
+
+  currentIndex = 0;
+  timeline = [shuffledEvents[currentIndex++]];
+  renderTimeline();
+  loadNextEvent();
+  updateLiveScore();
+  gameOverDueToError = false;
+  errorOverlay.classList.remove("visible");
+  gameOverEl.classList.add("hidden");
+  nextEventEl.classList.remove("hidden");
+}
+
+    function renderTimeline() {
+      timelineEl.innerHTML = "";
+
+      for (let i = 0; i <= timeline.length; i++) {
+        const placeholder = document.createElement("li");
+        placeholder.classList.add("placeholder");
+        placeholder.dataset.index = i;
+        placeholder.ondragover = e => e.preventDefault();
+        placeholder.ondrop = e => {
+          e.preventDefault();
+          const data = e.dataTransfer.getData("text/plain");
+          if (data === "drop-event") {
+            handleDrop(i);
+          }
+        };
+        timelineEl.appendChild(placeholder);
+
+        if (i < timeline.length) {
+          const li = document.createElement("li");
+          li.textContent = timeline[i].event;
+          const year = document.createElement("div");
+          year.classList.add("year");
+          year.textContent = timeline[i].year;
+          li.appendChild(year);
+          timelineEl.appendChild(li);
+        }
+      }
+    }
+
+    function loadNextEvent() {
+      if (currentIndex >= events.length) {
+        endGame();
+        return;
+      }
+
+    nextEvent = window.currentEventSet[currentIndex++];
+      nextEventEl.textContent = nextEvent.event;
+      nextEventEl.ondragstart = (e) => {
+        e.dataTransfer.setData("text/plain", "drop-event");
+      };
+    }
+
+    function handleDrop(position) {
+      const before = timeline[position - 1]?.year ?? -Infinity;
+      const after = timeline[position]?.year ?? Infinity;
+
+      const sameAsBefore = before === nextEvent.year;
+      const sameAsAfter = after === nextEvent.year;
+
+      const valid =
+        (nextEvent.year >= before && nextEvent.year <= after) ||
+        sameAsBefore || sameAsAfter;
+
+      if (valid) {
+        timeline.splice(position, 0, nextEvent);
+        renderTimeline();
+        loadNextEvent();
+        updateLiveScore();
+      } else {
+        gameOverDueToError = true;
+        nextEventEl.classList.add("hidden");
+        showErrorOverlay();
+      }
+    }
+
+    function updateLiveScore() {
+      liveScoreEl.textContent = timeline.length - 1;
+    }
+
+function showErrorOverlay() {
+  errorOverlay.classList.add("visible");
+  document.getElementById("errorYear").textContent = `Das richtige Jahr war: ${nextEvent.year}`;
+}
+
+
+    function dismissError() {
+      errorOverlay.classList.remove("visible");
+      if (gameOverDueToError) {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      gameOverEl.classList.remove("hidden");
+      nextEventEl.classList.add("hidden");
+      scoreEl.textContent = timeline.length - 1;
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    // Startspiel initialisieren
+    startGame();
+    
+  </script>
+</body>
+</html>
