@@ -31,7 +31,7 @@ const events = [
 { event: "US-Präsident Franklin D. Roosevelt untersagt den privaten Goldbesitz", year: 1933 },
 { event: "Die ARD strahlt erstmals den Weltspiegel mit Auslandskorrespondenten aus", year: 1963 },
 { event: "Waffenhändler Wiktor But wird in den USA zu 25 Jahren Haft verurteilt", year: 2012 },
-{ event: "Beim Länderspiel im Ibrox Park stürzt eine Holztribüne ein – erste Ibrox-Katastrophe", year: 1902 },
+{ event: "Beim Länderspiel England gegen Schottland im Ibrox Park stürzt eine Holztribüne ein – erste Ibrox-Katastrophe", year: 1902 },
 { event: "Das Rennpferd Phar Lap stirbt unter ungeklärten Umständen in Kalifornien", year: 1932 },
 { event: "Mit dem Tod von Königin Victoria endet das Viktorianische Zeitalter", year: 1901 },
 { event: "Die Niederlande verweigern die Auslieferung von Wilhelm II.", year: 1920 },
