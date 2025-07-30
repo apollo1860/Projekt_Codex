@@ -151,7 +151,6 @@ const events = [
   { event: "Die Apartheid in Südafrika endet mit der Freilassung von Nelson Mandela", year: 1990 },
   { event: "Die Europäische Union wird offiziell gegründet", year: 1993 },
   { event: "Die Finanzkrise von 2008 löst eine globale Rezession aus", year: 2008 },
-  { event: "Großbritannien stimmt im Brexit-Referendum für den Austritt aus der EU", year: 2016 },
 { event: "Die Inkas gründen ihre Hauptstadt Cusco", year: 1438 },
 { event: "Die Azteken gründen Tenochtitlán", year: 1325 },
 { event: "König Ludwig XVI. wird während der Französischen Revolution hingerichtet", year: 1793 },
