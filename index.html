@@ -145,6 +145,7 @@ body {
     let currentIndex = 0;
     let nextEvent = null;
     let gameOverDueToError = false;
+    let usedEvents = [];
 
     const timelineEl = document.getElementById("timeline");
     const nextEventEl = document.getElementById("next-event");
@@ -158,7 +159,12 @@ body {
     }
 
 function startGame() {
-  const shuffledEvents = shuffle([...events]);
+  const remainingEvents = events.filter(e => !usedEvents.includes(e));
+const shuffledEvents = shuffle([...remainingEvents]);
+if (shuffledEvents.length === 0) {
+  alert("Alle Events wurden bereits gespielt. Bitte die Seite neu laden.");
+  return;
+}
   window.currentEventSet = shuffledEvents; // ✅ global verfügbar machen
 
   currentIndex = 0;
@@ -227,6 +233,7 @@ function startGame() {
 
       if (valid) {
         timeline.splice(position, 0, nextEvent);
+        usedEvents.push(nextEvent);
         renderTimeline();
         loadNextEvent();
         updateLiveScore();
