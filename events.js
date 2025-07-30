@@ -61,7 +61,7 @@ const events = [
 { event: "Raymond van Barneveld wirft als erster Dartspieler bei einer PDC-WM einen Neun-Darter", year: 2009 },
 { event: "Erstmals werden die Tagesthemen in der ARD gesendet", year: 1978 },
 { event: "Muhammad Ali besiegt George Foreman im Rumble in the Jungle", year: 1974 },
-{ event: "Elsass und Lothringen erklären ihre Unabhängigkeit als Republik Elsaß-Lothringen", year: 1918 },
+{ event:  Elsass und Lothringen erklären ihre Unabhängigkeit als Republik Elsaß-Lothringen, die aber wegen des Einmarsches französischer Truppen nur wenige Tage Bestand hat", year: 1918 },
 { event: "In Rom wird das Triumvirat zwischen Octavian, Marcus Antonius und Lepidus geschlossen", year: -43 },
 { event: "Charlie Chaplins Film Der große Diktator wird in den USA uraufgeführt", year: 1940 },
 { event: "Queen Elizabeth II. verstirbt nach 70 Jahren Regentschaft", year: 2022 },
